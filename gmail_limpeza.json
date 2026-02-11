@@ -1,0 +1,118 @@
+{
+  "name": "gmail_limpeza",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "852d0c79-bbe6-4595-b597-82b4387cd25c",
+      "name": "trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "9Cetk1PGrq8cDTaj",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "KJVDwyL8VxKfGyHY",
+          "mode": "list",
+          "cachedResultName": "emails_lixos",
+          "cachedResultUrl": "/projects/PHbuPv5vIhBCOcg6/datatables/KJVDwyL8VxKfGyHY"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyName": "remetente",
+              "keyValue": "={{ $json[\"From\"].extractEmail() }}"
+            }
+          ]
+        },
+        "limit": 1
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        176,
+        0
+      ],
+      "id": "a960c60e-dbec-4c78-9988-62755d0bfae2",
+      "name": "get_emails_lixos"
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "messageId": "={{ $node[\"trigger\"].json[\"id\"] }}"
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        352,
+        0
+      ],
+      "id": "8487479d-c14f-46ff-b06a-48e5b2cbd404",
+      "name": "delete_email",
+      "webhookId": "067c464a-34b5-4325-92d0-c735a243701a",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "9Cetk1PGrq8cDTaj",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "trigger": {
+      "main": [
+        [
+          {
+            "node": "get_emails_lixos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "get_emails_lixos": {
+      "main": [
+        [
+          {
+            "node": "delete_email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "108ef975-2697-45a8-97d4-4a675b0995fe",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c32b80a567e671a3bb0aab778b080ffead42c0945857a4879a86f11bfecb4357"
+  },
+  "id": "HxyTyS5BMy02EiNS",
+  "tags": []
+}
